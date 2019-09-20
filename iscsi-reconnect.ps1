@@ -1,6 +1,6 @@
 # iSCSI-Targets neu verbinden
 # author: flo.alt@fa-netz.de
-# Ver 0.8
+# Ver 0.81
 
 ## Parameter konfigurieren
 
@@ -19,12 +19,9 @@ if($lookiscsi -ne $null) {
     echo "iSCSI vorhanden, es gibt nichts zu tun"
     }
 else {
-    echo "iSCSI muss neu verbunden werden"
-    # Bestehende iSCSI-Verbindungen trennen
-    $Target = Get-IscsiTarget
-    Disconnect-IscsiTarget -NodeAddress $Target.NodeAddress -Confirm:$false
-    echo "bestehende Verbindung getrennt"
-    # iSCSI-Target neu verbinden
+    echo "iSCSI Target has to be reconnected"
+    Disconnect-IscsiTarget -NodeAddress $iqn -Confirm:$false
+    echo "iSCSI Target disconnected"
     Connect-IscsiTarget -NodeAddress $iqn
-    echo "Verbindung neu hergestellt"
+    echo "iSCSI Target connected"
     }

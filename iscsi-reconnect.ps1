@@ -5,7 +5,7 @@
 ## Set parameters
 
 param(
-$suche = "SERV12*";
+$suche = "SERV12*",
 $iqn = "iqn.2004-08.jp.buffalo.8857eeb84e6e.dc-backup"
 )
 

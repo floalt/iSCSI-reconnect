@@ -1,19 +1,19 @@
-# iSCSI-Targets neu verbinden
+# reconnect iSCSI-Targets
 # author: flo.alt@fa-netz.de
-# Ver 0.81
+# Ver 0.8
 
-## Parameter konfigurieren
+## Set parameters
 
 param(
-$suche = "SERV12*",
+$suche = "SERV12*";
 $iqn = "iqn.2004-08.jp.buffalo.8857eeb84e6e.dc-backup"
 )
 
-## Abfragen, ob iSCSI Volume verbunden ist
+## check if iSCSI Volume is connected
 
 $lookiscsi=Get-Volume | where {$_.FileSystemLabel -like $suche} | ft FileSystemLabel -HideTableHeaders
 
-## Maßnahme ergreifen
+## do something
 
 if($lookiscsi -ne $null) {
     echo "iSCSI vorhanden, es gibt nichts zu tun"

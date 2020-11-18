@@ -13,5 +13,9 @@ If not: restart iSCSI service and connect target
 
 ## Usage
 Set Parameters in the script:<br>
-$suche: name of the local server to find all iSCSI-volumes<br>
-$iqn: the iqn of the iSCSI Target to be connected
+
+Type: ''Get-Volume | fl *''<br>
+Use ''FileSystemLabel'' for ''label''<br>
+
+Type: ''Get-IscsiSession''<br>
+Use ''TargetNodeAddress'' for ''iqn''<br>

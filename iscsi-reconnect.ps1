@@ -1,27 +1,49 @@
-# reconnect iSCSI-Targets
-# author: flo.alt@fa-netz.de
-# Ver 0.8
+<#
+reconnect iSCSI-Targets
+author: flo.alt@fa-netz.de
+Ver 0.8.1
+
+
+To find values for these parameters
+
+Type: 'Get-Volume | fl *'
+Use 'FileSystemLabel' for 'label'
+
+Type: 'Get-IscsiSession'
+Use 'TargetNodeAddress' for 'iqn'
+
+#>
+
+
 
 ## Set parameters
 
-param(
-$suche = "SERV12*",
-$iqn = "iqn.2004-08.jp.buffalo.8857eeb84e6e.dc-backup"
+$iscsivol = @(
+    @{label = 'serv-ap*';iqn = 'iqn.2004-08.jp.buffalo.106f3f1711ba.app-backup'}
+    @{label = 'o365-backup';iqn = 'iqn.2004-08.jp.buffalo.106f3fcf0c40.o365-backup'}
 )
 
-## check if iSCSI Volume is connected
 
-$lookiscsi=Get-Volume | where {$_.FileSystemLabel -like $suche} | ft FileSystemLabel -HideTableHeaders
+## Script
 
-## do something
 
-if($lookiscsi -ne $null) {
-    echo "iSCSI vorhanden, es gibt nichts zu tun"
+foreach($vol in $iscsivol) {
+    
+    # check if iSCSI Volume is connected
+    $lookiscsi=Get-Volume | where {$_.FileSystemLabel -like $vol.label} | ft FileSystemLabel -HideTableHeaders
+
+    if($lookiscsi -ne $null) {
+    $label = $vol.label
+        echo "OK: iSCSI $label is connected. Nothing to do."
+    
+    } else {
+        echo "ERROR: iSCSI $label is not connected."
+
+        # reconnect iSCSI volume
+        echo "reconnecting iSCSI target..."
+        Disconnect-IscsiTarget -NodeAddress $vol.iqn -Confirm:$false
+        echo "iSCSI Target disconnected"
+        Connect-IscsiTarget -NodeAddress $vol.iqn
+        echo "iSCSI Target connected"
     }
-else {
-    echo "iSCSI Target has to be reconnected"
-    Disconnect-IscsiTarget -NodeAddress $iqn -Confirm:$false
-    echo "iSCSI Target disconnected"
-    Connect-IscsiTarget -NodeAddress $iqn
-    echo "iSCSI Target connected"
-    }
+}
